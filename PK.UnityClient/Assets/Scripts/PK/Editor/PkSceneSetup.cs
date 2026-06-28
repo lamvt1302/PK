@@ -29,8 +29,7 @@ namespace PK.Editor
             EnsureMainCamera();
             EnsureDirectionalLight();
             EnsurePkBootstrap();
-            // TODO: Rebuild HUD setup (Phase 2)
-            // Original: EnsurePkRuntimeHud();
+            EnsurePkHudManager();
 
             EditorSceneManager.SaveScene(scene, ScenePath, true);
             AddSceneToBuildSettings();
@@ -159,20 +158,25 @@ namespace PK.Editor
             }
         }
 
-        // TODO: Rebuild HUD setup (Phase 2)
-        // Original: private static void EnsurePkRuntimeHud()
-        // Original: {
-        // Original:     var go = GameObject.Find("PK_RuntimeHud");
-        // Original:     if (go == null)
-        // Original:     {
-        // Original:         go = new GameObject("PK_RuntimeHud");
-        // Original:     }
-        // Original: 
-        // Original:     if (go.GetComponent<PkRuntimeHud>() == null)
-        // Original:     {
-        // Original:         go.AddComponent<PkRuntimeHud>();
-        // Original:     }
-        // Original: }
+        private static void EnsurePkHudManager()
+        {
+            var go = GameObject.Find("PK_HUD");
+            if (go == null)
+            {
+                go = new GameObject("PK_HUD");
+            }
+
+            if (go.GetComponent<PK.UI.PkHudManager>() == null)
+            {
+                var hud = go.AddComponent<PK.UI.PkHudManager>();
+                var bootstrap = Object.FindObjectOfType<PkBootstrap>();
+                if (bootstrap != null)
+                {
+                    var field = typeof(PK.UI.PkHudManager).GetField("Bootstrap");
+                    if (field != null) field.SetValue(hud, bootstrap);
+                }
+            }
+        }
 
         // ---- Build settings ---------------------------------------------------
 

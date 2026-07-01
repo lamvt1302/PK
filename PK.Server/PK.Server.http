@@ -1,0 +1,6 @@
+@PK.Server_HostAddress = http://localhost:5216
+
+GET {{PK.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
